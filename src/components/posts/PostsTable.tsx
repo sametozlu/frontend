@@ -16,20 +16,23 @@ export default function PostsTable() {
   const [editingPost, setEditingPost] = useState<Post | null>(null)
   const [form, setForm] = useState<NewPost>({ userId: 1, title: '', body: '' })
 
+  async function loadPostsAndUsers() {
+    try {
+      setLoading(true)
+      setError(null)
+      const [p, u] = await Promise.all([getPosts(), getUsers()])
+      setPosts(p)
+      setUsers(u)
+      setForm((prev) => ({ ...prev, userId: u[0]?.id || 1 }))
+    } catch (e) {
+      setError((e as Error).message)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   useEffect(() => {
-    ;(async () => {
-      try {
-        setLoading(true)
-        setError(null)
-        const [p, u] = await Promise.all([getPosts(), getUsers()])
-        setPosts(p)
-        setUsers(u)
-      } catch (e) {
-        setError((e as Error).message)
-      } finally {
-        setLoading(false)
-      }
-    })()
+    void loadPostsAndUsers()
   }, [])
 
   const filtered = useMemo(() => {
@@ -149,7 +152,16 @@ export default function PostsTable() {
       </div>
 
       {loading && <Loader label="🔄 Loading posts..." />}
-      {error && <div className="error-container">❌ {error}</div>}
+      {error && (
+        <div className="error-container">
+          ❌ {error}
+          <div className="mt-2">
+            <button type="button" className="btn-sm secondary" onClick={loadPostsAndUsers}>
+              Retry loading posts
+            </button>
+          </div>
+        </div>
+      )}
 
       <div className="table-container">
         <table className="table">

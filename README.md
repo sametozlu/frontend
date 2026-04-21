@@ -124,6 +124,9 @@ src/
 - [x] **Confirmation Dialogs**: Safe delete operations
 - [x] **Content Preview**: Post content preview in tables
 - [x] **Animations**: Smooth transitions and hover effects
+- [x] **Resilient API Layer**: Timeout-aware HTTP client with clearer error messages
+- [x] **Retry UX**: One-click retry actions on key data screens
+- [x] **Routing Quality**: Dedicated 404 page and safer production routing
 
 ### 🌟 Advanced Professional Features
 - [x] **Toast Notifications**: Real-time user feedback system
@@ -137,6 +140,7 @@ src/
 - [x] **Custom Hooks**: Reusable logic with useToast, useDarkMode, useKeyboardShortcuts
 - [x] **Error Boundaries**: Graceful error handling and recovery
 - [x] **Memory Management**: Optimized component lifecycle and cleanup
+- [x] **Error Boundary**: Global runtime fallback UI for unexpected render errors
 
 ## 🔧 API Integration
 
@@ -146,6 +150,12 @@ Currently uses JSONPlaceholder API for demonstration:
 - **Note**: Changes are not persisted (demo API limitation)
 
 For Phase 2, replace with your NestJS backend endpoints.
+
+You can override the API URL in production via:
+
+```bash
+VITE_API_BASE_URL=https://your-api.example.com
+```
 
 ## 📱 Responsive Breakpoints
 

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import type { User } from '../types/user'
 import type { Post } from '../types/post'
@@ -14,24 +14,37 @@ export default function UserDetailPage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
+  const loadUserDetail = useCallback(async () => {
+    try {
+      setLoading(true)
+      setError(null)
+      const [users, userPosts] = await Promise.all([getUsers(), getPostsByUser(userId)])
+      setUser(users.find((u) => u.id === userId) ?? null)
+      setPosts(userPosts)
+    } catch (e) {
+      setError((e as Error).message)
+    } finally {
+      setLoading(false)
+    }
+  }, [userId])
+
   useEffect(() => {
-    ;(async () => {
-      try {
-        setLoading(true)
-        setError(null)
-        const [users, userPosts] = await Promise.all([getUsers(), getPostsByUser(userId)])
-        setUser(users.find((u) => u.id === userId) ?? null)
-        setPosts(userPosts)
-      } catch (e) {
-        setError((e as Error).message)
-      } finally {
-        setLoading(false)
-      }
-    })()
+    void loadUserDetail()
   }, [userId])
 
   if (loading) return <Loader label="🔄 Loading user details..." />
-  if (error) return <div className="error-container">❌ {error}</div>
+  if (error) {
+    return (
+      <div className="error-container">
+        ❌ {error}
+        <div className="mt-2">
+          <button type="button" className="btn-sm secondary" onClick={loadUserDetail}>
+            Retry loading details
+          </button>
+        </div>
+      </div>
+    )
+  }
   if (!user) return <div className="error-container">❌ User not found.</div>
 
   return (

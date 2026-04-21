@@ -24,6 +24,9 @@ function App() {
 
   return (
     <div className="app-container">
+      <a className="skip-link" href="#main-content">
+        Skip to main content
+      </a>
       {/* Navigasyon Çubuğu - Modern glassmorphism efekti ile sticky header */}
       <nav className="navbar">
         <div className="navbar-content">
@@ -66,7 +69,7 @@ function App() {
       </nav>
       
       {/* Tutarlı padding ve max-width ile ana içerik alanı */}
-      <main className="main-content">
+      <main id="main-content" className="main-content">
         <div className="page-container">
           {/* Router outlet - mevcut sayfa component'ini render eder */}
           <Outlet />

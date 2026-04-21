@@ -43,19 +43,21 @@ export default function UsersTable() {
   const [editingUser, setEditingUser] = useState<User | null>(null)
   const [form, setForm] = useState<NewUser>({ name: '', username: '', email: '' })
 
+  async function loadUsers() {
+    try {
+      setLoading(true)
+      setError(null)
+      const data = await getUsers()
+      setUsers(data)
+    } catch (e) {
+      setError((e as Error).message)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   useEffect(() => {
-    ;(async () => {
-      try {
-        setLoading(true)
-        setError(null)
-        const data = await getUsers()
-        setUsers(data)
-      } catch (e) {
-        setError((e as Error).message)
-      } finally {
-        setLoading(false)
-      }
-    })()
+    void loadUsers()
   }, [])
 
   const filtered = useMemo(() => {
@@ -176,7 +178,16 @@ export default function UsersTable() {
       </div>
 
       {loading && <Loader label="🔄 Loading users..." />}
-      {error && <div className="error-container">❌ {error}</div>}
+      {error && (
+        <div className="error-container">
+          ❌ {error}
+          <div className="mt-2">
+            <button type="button" className="btn-sm secondary" onClick={loadUsers}>
+              Retry loading users
+            </button>
+          </div>
+        </div>
+      )}
 
       <div className="table-container">
         <table className="table">

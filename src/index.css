@@ -176,6 +176,7 @@ input:focus, select:focus, textarea:focus {
 
 .text-sm { font-size: 0.875rem; }
 .text-lg { font-size: 1.125rem; }
+.text-center { text-align: center; }
 
 .text-gray-500 { color: #6b7280; }
 .text-gray-600 { color: #4b5563; }
